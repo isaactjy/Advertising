@@ -1,9 +1,9 @@
-import urllib.request as urllib
+import requests
 from bs4 import BeautifulSoup
 
 url = "http://www.eventgalaxy.com.sg/products/inflatable-arches/"
-html = urllib.urlopen(url)
-soup = BeautifulSoup(html,features="html.parser")
+request = requests.get(url)
+soup = BeautifulSoup(request.text,features="html.parser")
 
 start_at = soup.find("li",{"class":"page_item page-item-1742"})
 shortened_soup = start_at.find_all_previous("li")

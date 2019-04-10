@@ -23,10 +23,11 @@ def loadImages(root,txt):
             all_classes.append(label)
         return np.array(all_imgs),np.array(all_classes)
 
-train_root = "D:\\Projects\\Advertising\\train\\"
-test_root = "D:\\Projects\\Advertising\\test\\"
+train_root = "D:\\Projects\\train\\"
+test_root = "D:\\Projects\\test\\"
 X_train,y_train = loadImages(train_root,"D:\\Projects\Advertising\\train.txt")
 X_test,y_test = loadImages(test_root,"D:\\Projects\\Advertising\\test.txt")
+X_train, X_test = X_train/255.0, X_test/255.0
 
 print(X_train.shape)
 
@@ -41,22 +42,39 @@ for i in range(25):
 plt.show()
 
 import tensorflow as tf
-from tensorflow import keras
+from tensorflow.keras import layers, models
 
-model = keras.Sequential([
-    keras.layers.Flatten(input_shape=(128, 128, 3)),
-    keras.layers.Dense(128, activation=tf.nn.relu),
-    keras.layers.Dense(64, activation=tf.nn.relu),
-    keras.layers.Dense(32, activation=tf.nn.relu),
-    keras.layers.Dense(10, activation=tf.nn.softmax)
-])
+model = models.Sequential()
+model.add(layers.Conv2D(32,(3,3), activation = "relu", input_shape =(128,128,3))) 
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+model.add(layers.Flatten())
+model.add(layers.Dense(64, activation='relu'))
+model.add(layers.Dense(10, activation='softmax'))
+
+model.summary()
 
 model.compile(optimizer='adam', 
               loss='sparse_categorical_crossentropy',
               metrics=['accuracy'])
 
-model.fit(X_train, y_train, epochs=100)
+history = model.fit(X_train, y_train, validation_split=0.3, epochs=100, batch_size = 32)
+# summarize history for accuracy
+plt.plot(history.history['accuracy'])
+plt.title('model accuracy')
+plt.ylabel('accuracy')
+plt.xlabel('epoch')
+plt.legend(['train', 'test'], loc='upper left')
+plt.show()
+# summarize history for loss
+plt.plot(history.history['loss'])
+plt.title('model loss')
+plt.ylabel('loss')
+plt.xlabel('epoch')
+plt.legend(['train', 'test'], loc='upper left')
+plt.show()
 
 test_loss, test_acc = model.evaluate(X_test, y_test)
-
 print('Test accuracy:', test_acc)

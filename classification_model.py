@@ -5,7 +5,7 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 
 class_dict = {}
-with open("classes.txt","r") as txt:
+with open("classes5.txt","r") as txt:
     classes = [line.strip() for line in txt.readlines()]
     class_dict = dict(zip(range(len(classes)),classes))
 
@@ -52,7 +52,7 @@ model.add(layers.MaxPooling2D((2, 2)))
 model.add(layers.Conv2D(64, (3, 3), activation='relu'))
 model.add(layers.Flatten())
 model.add(layers.Dense(64, activation='relu'))
-model.add(layers.Dense(10, activation='softmax'))
+model.add(layers.Dense(5, activation='softmax'))
 
 model.summary()
 
@@ -60,7 +60,7 @@ model.compile(optimizer='adam',
               loss='sparse_categorical_crossentropy',
               metrics=['accuracy'])
 
-history = model.fit(X_train, y_train, validation_split=0.3, epochs=100, batch_size = 32)
+history = model.fit(X_train, y_train, validation_split=0.3, epochs=100, batch_size = 50)
 # summarize history for accuracy
 plt.plot(history.history['accuracy'])
 plt.title('model accuracy')

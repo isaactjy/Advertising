@@ -2,11 +2,17 @@ import shutil
 import os
 from random import shuffle
 
-# Create dictionary for our 10 classes
+# Create dictionary for our 5 classes
 class_dict = {}
-with open("classes.txt","r") as txt:
+with open("classes5.txt","r") as txt:
     classes = [line.strip() for line in txt.readlines()]
     class_dict = dict(zip(classes,range(len(classes))))
+
+# Create dictionary for our 10 classes
+# class_dict = {}
+# with open("classes10.txt","r") as txt:
+#     classes = [line.strip() for line in txt.readlines()]
+#     class_dict = dict(zip(classes,range(len(classes))))
 
 # Split into train and test sets - Creates 'train.txt' and 'test.txt' as well copying the images to their appropriate folders
 def createData(imgroot,classes,ratio):
@@ -24,10 +30,10 @@ def createData(imgroot,classes,ratio):
                 split = int(ratio * len(imgList))
                 for trainImg in imgList[:split]:
                     trainList.append(trainImg)
-                    shutil.copyfile(imgroot + "\\" + c + "\\" + trainImg.split(" ")[0],"D:\\Projects\\Advertising\\train\\" + trainImg.split(" ")[0])
+                    shutil.copyfile(imgroot + "\\" + c + "\\" + trainImg.split(" ")[0],"D:\\Projects\\train\\" + trainImg.split(" ")[0])
                 for testImg in imgList[split:]:
                     testList.append(testImg)
-                    shutil.copyfile(imgroot + "\\" + c + "\\" + testImg.split(" ")[0],"D:\\Projects\\Advertising\\test\\" + testImg.split(" ")[0])
+                    shutil.copyfile(imgroot + "\\" + c + "\\" + testImg.split(" ")[0],"D:\\Projects\\test\\" + testImg.split(" ")[0])
 
             shuffle(trainList)
             shuffle(testList)
